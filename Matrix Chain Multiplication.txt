@@ -1,0 +1,88 @@
+Matrix Chain Multiplication
+HardAccuracy: 49.64%Submissions: 94K+Points: 8
+Join the most popular course on DSA. Master Skills & Become Employable by enrolling today! 
+Given a sequence of matrices, find the most efficient way to multiply these matrices together. The efficient way is the one that involves the least number of multiplications.
+
+The dimensions of the matrices are given in an array arr[] of size N (such that N = number of matrices + 1) where the ith matrix has the dimensions (arr[i-1] x arr[i]).
+
+Example 1:
+
+Input: N = 5
+arr = {40, 20, 30, 10, 30}
+Output: 26000
+Explaination: There are 4 matrices of dimension 
+40x20, 20x30, 30x10, 10x30. Say the matrices are 
+named as A, B, C, D. Out of all possible combinations,
+the most efficient way is (A*(B*C))*D. 
+The number of operations are -
+20*30*10 + 40*20*10 + 40*10*30 = 26000.
+
+Example 2:
+
+Input: N = 4
+arr = {10, 30, 5, 60}
+Output: 4500
+Explaination: The matrices have dimensions 
+10*30, 30*5, 5*60. Say the matrices are A, B 
+and C. Out of all possible combinations,the
+most efficient way is (A*B)*C. The 
+number of multiplications are -
+10*30*5 + 10*5*60 = 4500.
+
+Solution :  
+
+The problem is a partition DP problem. 
+
+What is partition DP ?
+ - When we solve a problem in a pattern.
+
+   For example :  1+2+3x5      
+   we can solve it like (1+2+3)x5 or (1+2)+(3x5)
+
+Suppose we have three matrices, A, B, and C with dimensions 10 X 30, 30 X 5, and 5 X 60 respectively. 
+
+A X B = 10 X 5  and the number of operations are 10 X 30 X 5.
+B X C = 30 X 60 and the number of operations are 30 X 5 X 60.
+
+Suppose we have to multiply A,B and C. There cab be multiple ways to do it. Either A(BC) or (AB)C.
+A(BC) = 10 X 30 X 60 + 30 X 5 X 60 = 27000
+(AB)C = 10 X 30 X 5 + 10 X 5 X 60  = 4500
+
+So, we have to return minimum operations. Hence, 4500 is the answer.
+
+Similarly, ABCD can be multiplied in multiple ways. 
+
+(AB)(CD) , A(BCD) , A(B(CD)) , (ABC)D , (A(BC)D) and so on.
+
+arr[] = {10,20,30,40,50} where arr[i] x arr[i-1] are the dimensions of an ith matrix.
+
+A = 10 X 20 
+B = 20 X 30
+C = 30 X 40
+D = 40 X 50
+
+Rules of a partition DP:
+
+1.  Start with an entire block.  f(i,j)
+    i at start, j at end 
+    start will be 1 here because dimensions are arr[i-1] x arr[i] 
+2.  Try all partitions. Run a loop to try all partitions.
+3.  Return the best possible 2 partitions.
+
+Base case : i and j will shrink, so base case will be when i == j then number od operations will be 0.
+
+Now, how to find partitions ? 
+
+10 20 30 40 50
+   i        j
+   A ) B C  D
+   A   B) C D
+   A   B  C) D
+
+')' represents partition here. So, we can say we have k partitions from i to j-1. And solve f(i,k) and f(k+1,j).
+
+When k = 1 
+     i = 1
+     j = N-1
+(A)BCD  = (10 x 20) (20 x 50) =  10 x 20 x 50 operations  = arr[i-1] * arr[k] * arr[j]
+
